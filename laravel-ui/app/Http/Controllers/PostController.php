@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Validator;
-use Intervention\Image\ImageManagerStatic as Image;
 
 class PostController extends Controller
 {
@@ -39,33 +37,17 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'description' => 'required|min:2',
-            'email' => 'required|unique',
-        ], [
-            'title.unique' => 'This title already exist',
+
+        $data = Post::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'description' => $request->description,
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 422,
-                'errors' => $validator->errors(),
-            ]);
-        } else {
-
-        $post = new Post();
-        $post->name = $request->name;
-        $post->description = $request->description;
-        $post->email = $request->email;
-
-        $post->save();
 
         return response()->json([
             'status' => 200,
             'message' => 'Post Added',
         ]);
-    }
     }
 
     /**
