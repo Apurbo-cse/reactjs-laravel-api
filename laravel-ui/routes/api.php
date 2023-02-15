@@ -21,4 +21,4 @@ use App\Http\Controllers\PostController;
 
 
 Route::get('/post',[PostController::class, 'index']);
-Route::post('/store',[PostController::class, 'store']);
+Route::get('/store',[PostController::class, 'store']);
