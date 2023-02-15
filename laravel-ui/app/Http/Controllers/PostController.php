@@ -40,9 +40,9 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|unique:learning_sessions',
-            'sub_title' => 'required|min:2',
-            'image' => 'required|mimes:jpg,jpeg,png,gif,webp',
+            'name' => 'required',
+            'description' => 'required|min:2',
+            'email' => 'required|unique',
         ], [
             'title.unique' => 'This title already exist',
         ]);
@@ -55,20 +55,10 @@ class PostController extends Controller
         } else {
 
         $post = new Post();
-        $post->title = $request->title;
-        $post->sub_title = $request->sub_title;
+        $post->name = $request->name;
+        $post->description = $request->description;
+        $post->email = $request->email;
 
-        if ($request->hasfile('image')) {
-            $destination = $post->banner;
-            if (File::exists($destination)) {
-                File::delete($destination);
-            }
-            $file = $request->file('image');
-            $extension = $file->getClientOriginalExtension();
-            $filename = 'image/' . time() . '.' . $extension;
-            Image::make($file)->save($filename, 100);
-            $post->banner = $filename;
-        }
         $post->save();
 
         return response()->json([
