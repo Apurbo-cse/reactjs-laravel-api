@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -38,6 +39,15 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|unique',
+            'description' => 'required|min:2',
+        ], [
+            'email.unique' => 'This name already exist',
+        ]);
+
+        
         $data = Post::create([
             'name' => $request->name,
             'email' => $request->email,
